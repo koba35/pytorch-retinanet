@@ -3,13 +3,18 @@
 Download pretrained ResNet50 params from:
   https://download.pytorch.org/models/resnet50-19c8e357.pth
 '''
+
+import sys
+sys.path.append('~/projects/pytorch-retinanet')
+
+
 import math
 import torch
 import torch.nn as nn
 import torch.nn.init as init
 
-from ..fpn import FPN50
-from ..retinanet import RetinaNet
+from fpn import FPN50
+from retinanet import RetinaNet
 
 
 print('Loading pretrained ResNet50 model..')
