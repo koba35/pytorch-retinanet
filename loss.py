@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from utils import one_hot_embedding
 from torch.autograd import Variable
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class FocalLoss(nn.Module):
     def __init__(self, num_classes=20):
@@ -28,7 +29,7 @@ class FocalLoss(nn.Module):
 
         t = one_hot_embedding(y.data.cpu(), 1+self.num_classes)  # [N,21]
         t = t[:,1:]  # exclude background
-        t = Variable(t).cuda()  # [N,20]
+        t = t.to(device)  # [N,20]
 
         p = x.sigmoid()
         pt = p*t + (1-p)*(1-t)         # pt = p if t > 0 else 1-p
@@ -50,7 +51,7 @@ class FocalLoss(nn.Module):
 
         t = one_hot_embedding(y.data.cpu(), 1+self.num_classes)
         t = t[:,1:]
-        t = Variable(t).cuda()
+        t = t.to(device)
 
         xt = x*(2*t-1)  # xt = x if t > 0 else -x
         pt = (2*xt+1).sigmoid()
@@ -73,7 +74,7 @@ class FocalLoss(nn.Module):
         '''
         batch_size, num_boxes = cls_targets.size()
         pos = cls_targets > 0  # [N,#anchors]
-        num_pos = pos.data.float().sum()
+        num_pos = pos.data.sum().float()
 
         ################################################################
         # loc_loss = SmoothL1Loss(pos_loc_preds, pos_loc_targets)
