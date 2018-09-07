@@ -73,7 +73,7 @@ class FocalLoss(nn.Module):
         '''
         batch_size, num_boxes = cls_targets.size()
         pos = cls_targets > 0  # [N,#anchors]
-        num_pos = pos.data.long().sum()
+        num_pos = pos.data.float().sum()
 
         ################################################################
         # loc_loss = SmoothL1Loss(pos_loc_preds, pos_loc_targets)
@@ -92,6 +92,5 @@ class FocalLoss(nn.Module):
         cls_loss = self.focal_loss_alt(masked_cls_preds, cls_targets[pos_neg])
 
         print('loc_loss: %.3f | cls_loss: %.3f' % (loc_loss.item()/num_pos, cls_loss.item()/num_pos), end=' | ')
-        import pdb; pdb.set_trace()
-        loss = (loc_loss+cls_loss)/num_pos.float()
+        loss = (loc_loss+cls_loss)/num_pos
         return loss
