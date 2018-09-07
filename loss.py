@@ -92,5 +92,6 @@ class FocalLoss(nn.Module):
         cls_loss = self.focal_loss_alt(masked_cls_preds, cls_targets[pos_neg])
 
         print('loc_loss: %.3f | cls_loss: %.3f' % (loc_loss.item()/num_pos, cls_loss.item()/num_pos), end=' | ')
+        import pdb; pdb.set_trace()
         loss = (loc_loss+cls_loss.float())/num_pos
         return loss
